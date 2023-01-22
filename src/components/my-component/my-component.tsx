@@ -11,6 +11,7 @@ export class MyComponent {
   @State() results: any[] = [];
   @State() fileName: string[] = [];
   @State() activeIndex: number = 0;
+  @State() editMode: boolean = false;
   @Listen('change', { capture: true })
   handleFiles(event: any) {
     const files = event.target.files;
@@ -40,24 +41,27 @@ export class MyComponent {
   }
 
   editTableData(e: any, td: string | number, th: string | number, index: number, rowOrColumn: string) {
-    if (rowOrColumn === 'row') {
-      this.results[this.activeIndex].slice(1)[index].forEach(() => {
+    if (e.target.textContent !== td) {
+      if (rowOrColumn === 'row') {
         if (td === this.results[this.activeIndex].slice(1)[index][th]) {
-          this.results[this.activeIndex].slice(1)[index][th] = e.target.innerText;
+          this.results[this.activeIndex].slice(1)[index][th] = e.target.textContent;
         }
-      });
-    } else {
-      this.results[this.activeIndex][0].forEach(() => {
+      } else {
         if (td === this.results[this.activeIndex][0][th]) {
-          this.results[this.activeIndex][0][th] = e.target.innerText;
+          this.results[this.activeIndex][0][th] = e.target.textContent;
         }
-      });
+      }
     }
+    this.editMode = false;
+  }
+
+  activateEditMode() {
+    this.editMode = true;
   }
 
   getTableTd(td: any, th: string | number, index: number, rowOrColumn: string) {
     return (
-      <td class="table-data-td" contentEditable={true} onBlur={e => this.editTableData(e, td, th, index, rowOrColumn)}>
+      <td class="table-data-td" contentEditable={this.editMode} onClick={() => this.activateEditMode()} onBlur={e => this.editTableData(e, td, th, index, rowOrColumn)}>
         {td}
       </td>
     );
