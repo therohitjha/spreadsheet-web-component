@@ -11,6 +11,7 @@ export class MyComponent {
   @State() fileName: string[] = [];
   @State() activeIndex: number = 0;
   @State() editMode: boolean = false;
+  @State() selectedColumnIndex: number = -1;
   @Listen('change', { capture: true })
   handleFiles(event: any) {
     const files = event.target.files;
@@ -58,12 +59,21 @@ export class MyComponent {
     this.editMode = true;
   }
 
-  getTableTd(td: any, th: string | number, index: number, rowOrColumn: string) {
+  getTableTd(td: any, th: string | number, index: number, indexSelection: number, rowOrColumn: string) {
     return (
-      <td class="table-data-td" contentEditable={this.editMode} onClick={() => this.activateEditMode()} onBlur={e => this.editTableData(e, td, th, index, rowOrColumn)}>
+      <td
+        class={`table-data-td ${this.selectedColumnIndex === indexSelection ? 'selected-column' : ''}`}
+        contentEditable={this.editMode}
+        onClick={() => this.activateEditMode()}
+        onBlur={e => this.editTableData(e, td, th, index, rowOrColumn)}
+      >
         {td}
       </td>
     );
+  }
+
+  setColumnIndex(index: number) {
+    this.selectedColumnIndex = index;
   }
 
   render() {
@@ -82,20 +92,20 @@ export class MyComponent {
             <thead>
               <tr>
                 <th></th>
-                {this.getHeader(this.results[this.activeIndex][0].length).map((header: string) => (
-                  <th>{header}</th>
+                {this.getHeader(this.results[this.activeIndex][0].length).map((header: string, index: number) => (
+                  <th onClick={() => this.setColumnIndex(index)}>{header}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td class="table-data-index">{1}</td>
-                {this.results[this.activeIndex][0].map((keys: string | number, index: number) => this.getTableTd(keys, index, index, 'column'))}
+                {this.results[this.activeIndex][0].map((keys: string | number, index: number) => this.getTableTd(keys, index, index, index, 'column'))}
               </tr>
               {this.results[this.activeIndex].slice(1).map((e: any, i: number) => (
                 <tr class="table-data-container">
                   <td class="table-data-index">{i + 2}</td>
-                  {Object.entries(e).map(([keys, values]) => this.getTableTd(values, keys, i, 'row'))}
+                  {Object.entries(e).map(([keys, values], index: number) => this.getTableTd(values, keys, i, index, 'row'))}
                 </tr>
               ))}
             </tbody>

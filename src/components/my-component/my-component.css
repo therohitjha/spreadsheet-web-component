@@ -85,6 +85,10 @@ td:hover {
   background-color: rgb(234, 239, 245);
 }
 
+.selected-column {
+  background-color: #f0f0f0;
+}
+
 .tab-container {
   width: 100%;
   position: fixed;
