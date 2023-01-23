@@ -1,6 +1,5 @@
 import { Component, h, Listen, State } from '@stencil/core';
 import Papa from 'papaparse';
-// import { data } from '../../utils/sample';
 
 @Component({
   tag: 'my-component',
@@ -8,7 +7,7 @@ import Papa from 'papaparse';
   shadow: true,
 })
 export class MyComponent {
-  @State() results: any[] = [];
+  @State() results: any = [];
   @State() fileName: string[] = [];
   @State() activeIndex: number = 0;
   @State() editMode: boolean = false;
@@ -70,47 +69,10 @@ export class MyComponent {
   render() {
     return (
       <div class="container">
-        <div class="file-upload-button-container">
-          <label htmlFor="file-upload" class="file-upload-button">
-            Upload
-          </label>
-          <span>Please select one or more csv file to continue.</span>
-          <input type="file" id="file-upload" multiple onChange={e => this.handleFiles(e)} />
-        </div>
+        <file-upload handleFiles={(e: any) => this.handleFiles(e)} />
         <br />
-        {this.results.length ? (
-          <table>
-            <thead>
-              <tr>
-                <th></th>
-                {this.getHeader(this.results[this.activeIndex][0].length).map((header: string) => (
-                  <th>{header}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="table-data-index">{1}</td>
-                {this.results[this.activeIndex][0].map((keys: string | number, index: number) => this.getTableTd(keys, index, index, 'column'))}
-              </tr>
-              {this.results[this.activeIndex].slice(1).map((e: any, i: number) => (
-                <tr class="table-data-container">
-                  <td class="table-data-index">{i + 2}</td>
-                  {Object.entries(e).map(([keys, values]) => this.getTableTd(values, keys, i, 'row'))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <h2>No Data</h2>
-        )}
-        <div class="tab-container">
-          {this.fileName.map((name: string, index: number) => (
-            <button style={this.activeIndex === index && { backgroundColor: 'white' }} onClick={() => this.activeTab(index)}>
-              {name}
-            </button>
-          ))}
-        </div>
+        <my-table results={this.results} getHeader={this.getHeader} getTableTd={this.getTableTd} activeIndex={this.activeIndex} />
+        <my-tab fileName={this.fileName} activeTab={this.activeTab} activeIndex={this.activeIndex} />
       </div>
     );
   }

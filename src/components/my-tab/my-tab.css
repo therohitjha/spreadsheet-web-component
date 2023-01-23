@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+.tab-container {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  background-color: rgb(234, 239, 245);
+  height: 50px;
+  display: flex;
+}
+
+.tab-container > button {
+  cursor: pointer;
+}

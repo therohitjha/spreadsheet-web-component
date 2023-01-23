@@ -1,0 +1,39 @@
+:host {
+  display: block;
+}
+
+.file-upload-button-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.file-upload-button-container > span {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 10px;
+}
+
+#file-upload {
+  display: none;
+}
+.file-upload-button {
+  width: 100px;
+  text-align: center;
+  background-color: rgb(38, 173, 226);
+  color: white;
+  outline: none;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: all 0.4s ease-in-out;
+  text-transform: uppercase;
+  margin-top: 5px;
+}
+.file-upload-button:hover {
+  background-color: rgb(100, 198, 237);
+  cursor: pointer;
+}

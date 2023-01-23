@@ -6,32 +6,87 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface FileUpload {
+        "handleFiles": any;
+    }
     interface MyComponent {
+    }
+    interface MyTab {
+        "activeIndex": number;
+        "activeTab": (index: number) => void;
+        "fileName": string[];
+    }
+    interface MyTable {
+        "activeIndex": number;
+        "getHeader": (length: number) => string[];
+        "getTableTd": (td: any, th: string | number, index: number, rowOrColumn: string) => any;
+        "results": any;
     }
 }
 declare global {
+    interface HTMLFileUploadElement extends Components.FileUpload, HTMLStencilElement {
+    }
+    var HTMLFileUploadElement: {
+        prototype: HTMLFileUploadElement;
+        new (): HTMLFileUploadElement;
+    };
     interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
     }
     var HTMLMyComponentElement: {
         prototype: HTMLMyComponentElement;
         new (): HTMLMyComponentElement;
     };
+    interface HTMLMyTabElement extends Components.MyTab, HTMLStencilElement {
+    }
+    var HTMLMyTabElement: {
+        prototype: HTMLMyTabElement;
+        new (): HTMLMyTabElement;
+    };
+    interface HTMLMyTableElement extends Components.MyTable, HTMLStencilElement {
+    }
+    var HTMLMyTableElement: {
+        prototype: HTMLMyTableElement;
+        new (): HTMLMyTableElement;
+    };
     interface HTMLElementTagNameMap {
+        "file-upload": HTMLFileUploadElement;
         "my-component": HTMLMyComponentElement;
+        "my-tab": HTMLMyTabElement;
+        "my-table": HTMLMyTableElement;
     }
 }
 declare namespace LocalJSX {
+    interface FileUpload {
+        "handleFiles"?: any;
+    }
     interface MyComponent {
     }
+    interface MyTab {
+        "activeIndex"?: number;
+        "activeTab"?: (index: number) => void;
+        "fileName"?: string[];
+    }
+    interface MyTable {
+        "activeIndex"?: number;
+        "getHeader"?: (length: number) => string[];
+        "getTableTd"?: (td: any, th: string | number, index: number, rowOrColumn: string) => any;
+        "results"?: any;
+    }
     interface IntrinsicElements {
+        "file-upload": FileUpload;
         "my-component": MyComponent;
+        "my-tab": MyTab;
+        "my-table": MyTable;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "file-upload": LocalJSX.FileUpload & JSXBase.HTMLAttributes<HTMLFileUploadElement>;
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
+            "my-tab": LocalJSX.MyTab & JSXBase.HTMLAttributes<HTMLMyTabElement>;
+            "my-table": LocalJSX.MyTable & JSXBase.HTMLAttributes<HTMLMyTableElement>;
         }
     }
 }
