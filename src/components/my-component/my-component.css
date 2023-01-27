@@ -42,48 +42,56 @@
   cursor: pointer;
 }
 
-.table-container{
-  height: 400px;
-  overflow-y: auto;
-}
-table {
+.table-container {
   width: 100%;
-  border-spacing: 0px;
+  height: 400px;
+  overflow: auto;
+}
+.table-default-header-container {
+  display: flex;
+  width: 100%;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
 }
 
-table > thead > tr > th {
+.table-default-header {
+  width: 100%;
   border: 2px solid rgb(208, 219, 216);
   border-right: 0.5px solid rgb(208, 219, 216);
   text-align: initial;
   background-color: rgb(234, 239, 245);
   padding-left: 5px;
 }
-table > tbody > tr > td {
+.table-row-container {
+  /* overflow: auto; */
+}
+
+.table-data-container {
+  display: flex;
+  width: 100%;
+}
+.table-data-td {
   border: 1px solid rgb(208, 219, 216);
   border-top: 0.5px solid rgb(208, 219, 216);
   border-right: 0.5px solid rgb(208, 219, 216);
   text-align: initial;
-}
-
-td:hover {
-  cursor: pointer;
-}
-
-.table-data-container > div {
-  border: 1px solid rgb(208, 219, 216);
-  text-align: center;
-}
-.table-data-td {
   padding-left: 5px;
   cursor: pointer;
   min-width: 150px;
+  flex: 1;
+  overflow: hidden;
+  height: 21px;
 }
 .table-data-td:hover {
   background-color: #eee;
+  overflow: auto;
 }
 .table-data-index {
+  width: 30px;
   text-align: center;
   background-color: rgb(234, 239, 245);
+  border: 1px solid rgb(208, 219, 216);
 }
 .table-data-index:hover {
   cursor: default;

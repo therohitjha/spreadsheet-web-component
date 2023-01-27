@@ -13,10 +13,11 @@ export class MyComponent {
   @State() editMode: boolean = false;
   @State() hasMoreData: boolean = true;
   @State() selectedColumnIndex: number = -1;
-  @State() startIndex: number = 1;
+  @State() startIndex: number = 0;
   @State() endIndex: number = 30;
-  copiedData: any[] = [];
   @State() lastScrollTop: number = 0;
+  @State() rowHeight: number = 22;
+  copiedData: any[] = [];
   tableDivRef: HTMLDivElement;
 
   @Listen('change', { capture: true })
@@ -87,14 +88,14 @@ export class MyComponent {
       this.copiedData.push(`${td}'\n'`);
     }
     return (
-      <td
+      <div
         class={`table-data-td ${this.selectedColumnIndex === indexSelection ? 'selected-column' : ''}`}
         contentEditable={this.editMode}
         onClick={() => this.activateEditMode()}
         onBlur={e => this.editTableData(e, td, th, index, rowOrColumn)}
       >
         {td}
-      </td>
+      </div>
     );
   }
 
@@ -105,15 +106,14 @@ export class MyComponent {
   handleScroll(e: any) {
     const scrollTop = e.target.scrollTop;
     if (scrollTop > this.lastScrollTop) {
-      this.endIndex = this.endIndex + 30;
+      this.endIndex = this.endIndex + 10;
     } else {
       if (this.endIndex >= 60) {
-        this.endIndex = this.endIndex - 30;
+        this.endIndex = this.endIndex - 10;
       }
     }
     this.lastScrollTop = scrollTop === 0 ? 0 : scrollTop;
   }
-
   render() {
     return (
       <div class="container">
@@ -127,31 +127,25 @@ export class MyComponent {
         <br />
         {this.results.length ? (
           <div class="table-container" ref={el => (this.tableDivRef = el)} onScroll={e => this.handleScroll(e)}>
-            <table>
-              <thead>
-                <tr>
-                  <th></th>
-                  {this.getHeader(this.results[this.activeIndex][0].length).map((header: string, index: number) => (
-                    <th onClick={() => this.setColumnIndex(index)}>{header}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="table-data-index">{1}</td>
-                  {this.results[this.activeIndex][0].map((keys: string | number, index: number) => this.getTableTd(keys, index, index, index, 'column'))}
-                </tr>
-                {this.results[this.activeIndex].slice(this.startIndex, this.endIndex).map((e: any, i: number) => (
-                  <tr class="table-data-container">
-                    <td class="table-data-index">{i + 2}</td>
-                    {Object.entries(e).map(([keys, values], index: number) => this.getTableTd(values, keys, i, index, 'row'))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div class="table-default-header-container">
+              <div class="table-data-index">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+              {this.getHeader(this.results[this.activeIndex][0].length).map((header: string, index: number) => (
+                <div onClick={() => this.setColumnIndex(index)} class="table-default-header">
+                  {header}
+                </div>
+              ))}
+            </div>
+            <div class="table-row-container">
+              {this.results[this.activeIndex].slice(this.startIndex, this.endIndex).map((e: any, i: number) => (
+                <div class="table-data-container">
+                  <div class="table-data-index">{i + 1}</div>
+                  {Object.entries(e).map(([keys, values], index: number) => this.getTableTd(values, keys, i, index, 'row'))}
+                </div>
+              ))}
+            </div>
           </div>
         ) : (
-          <h2>No Data</h2>
+          <div>No Data</div>
         )}
         <div class="tab-container">
           {this.fileName.map((name: string, index: number) => (
