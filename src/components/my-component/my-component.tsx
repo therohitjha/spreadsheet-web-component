@@ -1,4 +1,4 @@
-import { Component, h, Listen, State } from '@stencil/core';
+import { Component, Element, h, Listen, State } from '@stencil/core';
 import Papa from 'papaparse';
 
 @Component({
@@ -17,8 +17,13 @@ export class MyComponent {
   @State() endIndex: number = 30;
   @State() lastScrollTop: number = 0;
   @State() rowHeight: number = 22;
+  @State() paddingTop: number = 0;
+  @State() paddingBottom: number = 0;
   copiedData: any[] = [];
   tableDivRef: HTMLDivElement;
+  rowContainerRef: HTMLDivElement;
+  @Element() el: HTMLDivElement;
+  observer: IntersectionObserver;
 
   @Listen('change', { capture: true })
   handleFiles(event: any) {
@@ -106,14 +111,33 @@ export class MyComponent {
   handleScroll(e: any) {
     const scrollTop = e.target.scrollTop;
     if (scrollTop > this.lastScrollTop) {
-      this.endIndex = this.endIndex + 10;
+      this.endIndex = this.endIndex + 5;
     } else {
-      if (this.endIndex >= 60) {
-        this.endIndex = this.endIndex - 10;
+      if (this.endIndex >= 30) {
+        this.endIndex = this.endIndex - 5;
       }
     }
     this.lastScrollTop = scrollTop === 0 ? 0 : scrollTop;
   }
+
+  // componentDidRender() {
+  //   const observer = new IntersectionObserver(
+  //     entries => {
+  //       entries.forEach(entry => {
+  //         entry.target.classList.toggle('hide', entry.isIntersecting);
+  //         if (entry.isIntersecting) observer.unobserve(entry.target);
+  //       });
+  //     },
+  //     {
+  //       threshold: 1,
+  //     },
+  //   );
+  //   const rows = this.el.shadowRoot.querySelectorAll('.hide');
+  //   rows.forEach(element => {
+  //     observer.observe(element);
+  //   });
+  // }
+
   render() {
     return (
       <div class="container">
@@ -128,18 +152,27 @@ export class MyComponent {
         {this.results.length ? (
           <div class="table-container" ref={el => (this.tableDivRef = el)} onScroll={e => this.handleScroll(e)}>
             <div class="table-default-header-container">
-              <div class="table-data-index">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+              <div class="table-data-index">#</div>
               {this.getHeader(this.results[this.activeIndex][0].length).map((header: string, index: number) => (
                 <div onClick={() => this.setColumnIndex(index)} class="table-default-header">
                   {header}
                 </div>
               ))}
             </div>
-            <div class="table-row-container">
+            <div
+              class="table-row-container"
+              style={{
+                paddingTop: `${this.paddingTop}px`,
+                paddingBottom: `${this.paddingBottom}px`,
+              }}
+              ref={el => (this.rowContainerRef = el)}
+            >
               {this.results[this.activeIndex].slice(this.startIndex, this.endIndex).map((e: any, i: number) => (
-                <div class="table-data-container">
-                  <div class="table-data-index">{i + 1}</div>
-                  {Object.entries(e).map(([keys, values], index: number) => this.getTableTd(values, keys, i, index, 'row'))}
+                <div class="">
+                  <div class="table-data-container">
+                    <div class="table-data-index">{i + 1}</div>
+                    {Object.entries(e).map(([keys, values], index: number) => this.getTableTd(values, keys, i, index, 'row'))}
+                  </div>
                 </div>
               ))}
             </div>
