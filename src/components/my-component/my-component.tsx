@@ -1,4 +1,4 @@
-import { Component, Element, h, Listen, State } from '@stencil/core';
+import { Component, h, Listen, State } from '@stencil/core';
 import Papa from 'papaparse';
 
 @Component({
@@ -11,19 +11,16 @@ export class MyComponent {
   @State() fileName: string[] = [];
   @State() activeIndex: number = 0;
   @State() editMode: boolean = false;
-  @State() hasMoreData: boolean = true;
   @State() selectedColumnIndex: number = -1;
   @State() startIndex: number = 0;
   @State() endIndex: number = 30;
   @State() lastScrollTop: number = 0;
   @State() rowHeight: number = 22;
-  @State() paddingTop: number = 0;
-  @State() paddingBottom: number = 0;
   copiedData: any[] = [];
   tableDivRef: HTMLDivElement;
   rowContainerRef: HTMLDivElement;
-  @Element() el: HTMLDivElement;
-  observer: IntersectionObserver;
+  // @Element() el: HTMLDivElement;
+  // observer: IntersectionObserver;
 
   @Listen('change', { capture: true })
   handleFiles(event: any) {
@@ -159,14 +156,7 @@ export class MyComponent {
                 </div>
               ))}
             </div>
-            <div
-              class="table-row-container"
-              style={{
-                paddingTop: `${this.paddingTop}px`,
-                paddingBottom: `${this.paddingBottom}px`,
-              }}
-              ref={el => (this.rowContainerRef = el)}
-            >
+            <div class="table-row-container" ref={el => (this.rowContainerRef = el)}>
               {this.results[this.activeIndex].slice(this.startIndex, this.endIndex).map((e: any, i: number) => (
                 <div class="">
                   <div class="table-data-container">
