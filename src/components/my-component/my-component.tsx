@@ -1,4 +1,4 @@
-import { Component, h, Listen, State } from '@stencil/core';
+import { Component, h, State } from '@stencil/core';
 import Papa from 'papaparse';
 import { applyPolyfills, defineCustomElements } from '@revolist/revogrid/loader';
 applyPolyfills();
@@ -11,21 +11,18 @@ defineCustomElements();
 })
 export class MyComponent {
   @State() results: any = [];
-  @State() columns: any[] = [];
   @State() fileName: string[] = [];
   @State() activeIndex: number = 0;
   @State() editMode: boolean = false;
-  @State() selectedColumnIndex: number = -1;
-  @State() startIndex: number = 0;
   @State() loader: boolean = false;
-  @State() endIndex: number = 30;
+  @State() selectedColumnIndex: number = -1;
+  // @State() startIndex: number = 0;
+  // @State() endIndex: number = 30;
   copiedData: any[] = [];
-  tableDivRef: HTMLDivElement;
-  rowContainerRef: HTMLDivElement;
+  // tableDivRef: HTMLDivElement;
+  // rowContainerRef: HTMLDivElement;
 
-  @Listen('change', { capture: true })
   handleFiles(event: any) {
-    this.loader = true;
     const files = event.target.files;
     if (files.length) {
       for (let i = 0; i < files.length; i++) {
@@ -40,7 +37,6 @@ export class MyComponent {
         }
       }
     }
-    this.loader = false;
   }
 
   // getHeader(length: number): string[] {
@@ -108,6 +104,14 @@ export class MyComponent {
     this.selectedColumnIndex = index;
   }
 
+  forceRender() {
+    this.loader = !this.loader;
+  }
+
+  componentDidRender() {
+    if (this.results.length && !this.loader) this.forceRender();
+  }
+
   render() {
     return (
       <div class="container">
@@ -144,24 +148,23 @@ export class MyComponent {
             <revo-grid
               style={{ minHeight: '300px' }}
               columns={Object.keys(this.results[this.activeIndex][0]).map(key => {
-                return { prop: key, name: key, size: 200 };
+                return { prop: key, name: key };
               })}
               source={this.results[this.activeIndex]}
               resize={true}
               rowHeaders={true}
               range={true}
+              colSize={200}
               // @ts-ignore
               // columnTypes={columnTypes}
             />
           </div>
-        ) : this.loader ? (
-          <div>Loading...</div>
         ) : (
           <div>No Data</div>
         )}
         <div class="tab-container">
           {this.fileName.map((name: string, index: number) => (
-            <button style={this.activeIndex === index && { backgroundColor: 'white' }} onClick={() => this.activeTab(index)}>
+            <button class={this.activeIndex === index && 'active-tab'} onClick={() => this.activeTab(index)}>
               {name}
             </button>
           ))}

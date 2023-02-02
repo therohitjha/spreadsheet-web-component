@@ -48,6 +48,7 @@
 .table-container {
   width: 100%;
   height: 400px;
+  min-height: 250px;
   overflow: auto;
   border: 1px solid black;
 }
@@ -117,8 +118,20 @@
   background-color: rgb(234, 239, 245);
   height: 50px;
   display: flex;
+  z-index: 999;
 }
 
 .tab-container > button {
   cursor: pointer;
+  border: 2px solid #eee;
+  border-radius: 5px;
+  background-color: white;
+}
+.tab-container > button:hover {
+  transition: all 0.4s ease-in-out;
+}
+
+.active-tab {
+  background-color: #ddd !important;
+  border: 2px solid skyblue !important;
 }
